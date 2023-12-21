@@ -1,4 +1,4 @@
-package com.onurakin.project.db.Products.Products
+package com.onurakin.project.db.Products
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -21,16 +21,16 @@ interface ProductsDAO {
     @Delete
     fun deleteTask(tasks: Products)
 
-    @Query("DELETE FROM ${Constants.TABLENAME}")
+    @Query("DELETE FROM ${Constants.TABLEPRODUCTS}")
     fun deleteAllTasks()
 
-    @Query("SELECT * FROM ${Constants.TABLENAME} ORDER BY id DESC")
+    @Query("SELECT * FROM ${Constants.TABLEPRODUCTS} ORDER BY id DESC")
     fun getAllTasks():MutableList<Products>
 
-    @Query("SELECT * FROM ${Constants.TABLENAME} WHERE id =:id")
+    @Query("SELECT * FROM ${Constants.TABLEPRODUCTS} WHERE id =:id")
     fun getTaskById(id:Int): Products
 
-    @Query("SELECT * FROM ${Constants.TABLENAME} WHERE ProductName LIKE :name")
+    @Query("SELECT * FROM ${Constants.TABLEPRODUCTS} WHERE ProductName LIKE :name")
     fun getTasksByName(name:String):MutableList<Products>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -39,10 +39,10 @@ interface ProductsDAO {
             insertTask(it)
         }
     }
-    @Query("SELECT DISTINCT productType FROM ${Constants.TABLENAME}")
+    @Query("SELECT DISTINCT productType FROM ${Constants.TABLEPRODUCTS}")
     fun getDistinctProductTypes(): List<String>
 
-    @Query("SELECT * FROM Products WHERE category = :category")
-    fun getProductsByCategory(category: String): List<Products>
+    @Query("SELECT * FROM Products WHERE ProductType = :ProductType")
+    fun getProductsByCategory(ProductType: String): List<Products>
 
 }

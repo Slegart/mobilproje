@@ -1,4 +1,4 @@
-package com.onurakin.project.db.Products
+package com.onurakin.project.db.Users
 
 
 import android.os.Parcel
@@ -8,16 +8,16 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sefikonurakin_hw2.util.Constants
 
-@Entity(tableName = Constants.TABLENAME)
-class Products(
+@Entity(tableName = Constants.TABLEUSERS)
+class Users(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    var ProductName: String,
-    var ProductType: String,
-    @ColumnInfo(name = "date") var Date: String,
-    var Price: Int,
-    var InCart: Boolean = false,
-    var IsPurchased: Boolean = false
+    var UserName: String,
+    var Gender: String,
+    @ColumnInfo(name = "date") var JoinDate: String,
+    var Money: Int,
+    var Password: String = ""
+
 ) : Parcelable {
     // Parcelable constructor
     constructor(parcel: Parcel) : this(
@@ -26,29 +26,28 @@ class Products(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readInt(),
-        parcel.readByte() != 0.toByte(),
-        parcel.readByte() != 0.toByte()
+        parcel.readString() ?: ""
+
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
-        parcel.writeString(ProductName)
-        parcel.writeString(ProductType)
-        parcel.writeString(Date)
-        parcel.writeInt(Price)
-        parcel.writeByte(if (InCart) 1 else 0)
-        parcel.writeByte(if (IsPurchased) 1 else 0)
+        parcel.writeString(UserName)
+        parcel.writeString(Gender)
+        parcel.writeString(JoinDate)
+        parcel.writeInt(Money)
+        parcel.writeString(Password)
     }
 
     override fun describeContents(): Int {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Products> {
-        override fun createFromParcel(parcel: Parcel): Products {
-            return Products(parcel)
+    companion object CREATOR : Parcelable.Creator<Users> {
+        override fun createFromParcel(parcel: Parcel): Users {
+            return Users(parcel)
         }
-        override fun newArray(size: Int): Array<Products?> {
+        override fun newArray(size: Int): Array<Users?> {
             return arrayOfNulls(size)
         }
     }
@@ -56,12 +55,10 @@ class Products(
     override fun toString(): String {
         return "Tasks{" +
                 "id=" + id +
-                ", TaskName='" + ProductName + '\'' +
-                ", ProductType='" + ProductType + '\'' +
-                ", Date='" + Date + '\'' +
-                ", Price=" + Price +
-                ", InCart=" + InCart +
-                ", IsPurchased=" + IsPurchased +
+                ", TaskName='" + UserName + '\'' +
+                ", ProductType='" + Gender + '\'' +
+                ", Date='" + JoinDate + '\'' +
+                ", Price=" + Money +
                 '}'
     }
 }

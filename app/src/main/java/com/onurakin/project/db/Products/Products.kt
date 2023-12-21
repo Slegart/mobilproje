@@ -1,4 +1,4 @@
-package com.onurakin.project.db.Products.Products
+package com.onurakin.project.db.Products
 
 
 import android.os.Parcel
@@ -8,7 +8,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sefikonurakin_hw2.util.Constants
 
-@Entity(tableName = Constants.TABLENAME)
+@Entity(tableName = Constants.TABLEPRODUCTS)
 class Products(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
@@ -28,8 +28,6 @@ class Products(
         parcel.readInt(),
         parcel.readByte() != 0.toByte(),
         parcel.readByte() != 0.toByte()
-
-
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -50,7 +48,6 @@ class Products(
         override fun createFromParcel(parcel: Parcel): Products {
             return Products(parcel)
         }
-
         override fun newArray(size: Int): Array<Products?> {
             return arrayOfNulls(size)
         }

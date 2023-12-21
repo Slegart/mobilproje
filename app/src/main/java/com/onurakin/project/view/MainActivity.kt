@@ -1,185 +1,154 @@
-package com.sefikonurakin_hw2.view
+package com.onurakin.project.view
 
 import android.app.Dialog
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
-import android.widget.SeekBar
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.room.Room
-import com.sefikonurakin_hw2.databinding.ActivityMainBinding
-import com.sefikonurakin_hw2.db.Tasks
-import com.sefikonurakin_hw2.db.TaskRoomDatabase
+import com.onurakin.project.databinding.ActivityMainBinding
+import com.onurakin.project.db.Products.Products
+import com.onurakin.project.db.Products.ProductRoomDatabase
 import com.sefikonurakin_hw2.util.Constants
-import com.google.android.material.snackbar.Snackbar
-import com.sefikonurakin_hw2.R
-import com.sefikonurakin_hw2.adapter.CustomRecyclerViewAdapter
-import java.util.Collections
-
-
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.onurakin.project.adapter.CustomRecyclerViewAdapter
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 class MainActivity : AppCompatActivity(), CustomRecyclerViewAdapter.OnTaskItemClickListener {
 
-    lateinit var binding:ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     lateinit var customDialog: Dialog
-
-    var DeletedTasks = mutableListOf<Tasks>()
-
+    lateinit var Date:TextView
+    var DeletedTasks = mutableListOf<Products>()
     var TaskTemp =""
     var DateTemp =""
     var PriorityTemp = 0
-
     var adapter: CustomRecyclerViewAdapter?=null
 
-    private val TaskDB: TaskRoomDatabase by lazy {
-        Room.databaseBuilder(this, TaskRoomDatabase::class.java, Constants.DATABASENAME)
+    private val ProjectDB: ProductRoomDatabase by lazy {
+        Room.databaseBuilder(this, ProductRoomDatabase::class.java, Constants.DATABASENAME)
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
     }
-    //date should be date type
-    var Task1 = Tasks(1,"asd","10.23.2021",1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.recyclerCustomer.setLayoutManager(LinearLayoutManager(this))
-
+        getApi().start()
+        addProducts()
         getData()
-
+        fillSpinner()
+        binding.recyclerofProducts.setLayoutManager(LinearLayoutManager(this))
         binding.apply {
-            fabAdd.setOnClickListener{
 
-                var TasktoAdd = Tasks(666,"Asya","10.23.2021",1)
+        }
+    }
 
-                CreateDialog(TasktoAdd,"Add")
+    fun fillSpinner() {
+        val spinner = binding.productTypes
 
-                TaskDB.TasksDAO().insertTask(TasktoAdd)
+        val productTypes = ProjectDB.productsDAO().getDistinctProductTypes()
 
-                Snackbar.make(it, "Customer inserted", Snackbar.LENGTH_LONG).show()
-                getData()
+        val adapter = CustomRecyclerViewAdapter(this, mutableListOf(), this)
+        binding.recyclerofProducts.adapter = adapter
+
+        val initialProducts = ProjectDB.productsDAO().getAllTasks()
+        adapter.updateData(initialProducts)
+
+        val spinnerAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productTypes)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = spinnerAdapter
+
+        // Set a listener for item selection
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                Log.d("OnItemSelected", "Selected item at position: $position")
+                val selectedProductType = parent?.getItemAtPosition(position).toString()
+                Log.d("SelectedCategory", selectedProductType)
+
+                val categoryProducts = ProjectDB.productsDAO().getProductsByCategory(selectedProductType)
+                Log.d("CategoryProducts", categoryProducts.toString())
+
+                adapter.updateData(categoryProducts)
             }
-
-            ReturnButton.setOnClickListener {
-                if (DeletedTasks.isNotEmpty()) {
-
-                    // Create an Intent to start the second activity
-                    val intent = Intent(this@MainActivity, SecondActivity::class.java)
-
-                    // Add the deleted tasks to the intent as a ParcelableArrayList
-                    intent.putParcelableArrayListExtra("deletedTasks", DeletedTasks as ArrayList<Tasks>)
-
-                    // Start the second activity
-                    startActivity(intent)
-                }
-            }
-
-
-
-
-
-
-        }
-
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
 
     }
 
-    fun CreateDialog(task: Tasks, operation: String) {
-        customDialog = Dialog(this)
-        customDialog.setContentView(R.layout.dialog)
-
-        var taskName = customDialog.findViewById<TextView>(R.id.TaskNameDialog)
-        var DateDialog = customDialog.findViewById<TextView>(R.id.DateDialog)
-        var PrioritySeekBar = customDialog.findViewById<SeekBar>(R.id.Priority)
-
-        var btnSave = customDialog.findViewById<TextView>(R.id.btnSave)
-        var btnCancel = customDialog.findViewById<TextView>(R.id.btnCancel)
-        var btnDelete = customDialog.findViewById<TextView>(R.id.Delete_button)
-
-        taskName.text = task.TaskName
-        DateDialog.text = task.Date
-        PrioritySeekBar.progress = task.Priority
-
-        btnDelete.setOnClickListener {
-            DeletedTasks.add(task)
-            TaskDB.TasksDAO().deleteTask(task)
-            getData()
-            customDialog!!.dismiss()
-        }
-
-        btnSave.setOnClickListener {
-            val taskNameText = taskName.text.toString().trim()
-            val dateText = DateDialog.text.toString().trim()
-
-            if (isValidTaskName(taskNameText) && isValidDateFormat(dateText)) {
-                if (operation == "Add") {
-                    TaskDB.TasksDAO().insertTask(Tasks(0, taskNameText, dateText, PrioritySeekBar.progress))
-                    Snackbar.make(it, "Task inserted", Snackbar.LENGTH_LONG).show()
-                } else {
-                    TaskTemp = taskNameText
-                    DateTemp = dateText
-                    PriorityTemp = PrioritySeekBar.progress
-                    TaskDB.TasksDAO().updateTask(Tasks(task.id, TaskTemp, DateTemp, PriorityTemp))
-                    Snackbar.make(it, "Task updated", Snackbar.LENGTH_LONG).show()
-                }
-                getData()
-                customDialog!!.dismiss()
-            } else {
-                Snackbar.make(it, "Invalid input. Please check task name and date format.", Snackbar.LENGTH_LONG).show()
-            }
-        }
-
-        btnCancel.setOnClickListener {
-            customDialog!!.dismiss()
-        }
-
-        customDialog.show()
-    }
-
-    private fun isValidTaskName(name: String): Boolean {
-        // Check if the task name contains only letters and spaces
-        return name.matches(Regex("^[a-zA-Z ]+\$"))
-    }
-
-    private fun isValidDateFormat(date: String): Boolean {
-        // Check if the date has the format "01.01.0101"
-        return date.matches(Regex("^\\d{2}\\.\\d{2}\\.\\d{4}\$"))
-    }
 
 
-    private fun displayTasks(Tasks: MutableList<Tasks>) {
-        adapter = CustomRecyclerViewAdapter(this, Tasks, this)
+    private fun displayTasks(products: MutableList<Products>) {
+        adapter = CustomRecyclerViewAdapter(this, products, this)
 
-        binding.recyclerCustomer.adapter = adapter
+        binding.recyclerofProducts.adapter = adapter
         adapter?.notifyDataSetChanged()
     }
 
     fun getData(){
-        if(TaskDB.TasksDAO().getAllTasks().isNotEmpty()){
-            displayTasks(TaskDB.TasksDAO().getAllTasks())
+        if(ProjectDB.productsDAO().getAllTasks().isNotEmpty()){
+            displayTasks(ProjectDB.productsDAO().getAllTasks())
         }
         else{
-            binding.recyclerCustomer.adapter = null
+            binding.recyclerofProducts.adapter = null
         }
     }
-    fun prepareData(){
-        var customers=ArrayList<Tasks>()
-        Collections.addAll(customers,
-            Task1,
-            Tasks(148, "task 1", "10.10.2023", 2),
-            Tasks(897, "task 2", "11.11.2023", 3),
-            Tasks(333, "task 3", "12.12.2023", 1))
 
-        TaskDB.TasksDAO().insertAllTasks(customers)
 
+    override fun onTaskItemClick(task: Products, operation: String) {
+        Log.d("item", task.toString())
+       // if()
+    }
+    public fun getApi(): Thread {
+
+        return Thread{
+            val url = URL("https://worldtimeapi.org/api/timezone/Europe/Istanbul")
+            val connection = url.openConnection() as HttpURLConnection
+
+            if (connection.responseCode == 200) {
+                val apiResponse = connection.inputStream
+                val inputStreamReader = InputStreamReader(apiResponse, "UTF-8")
+                val request = Gson().fromJson(inputStreamReader, JsonObject::class.java)
+                val datetime = request.get("datetime").toString()
+                val abbreviation = request.get("abbreviation").toString()
+                UpdateUI(datetime, abbreviation)
+                inputStreamReader.close()
+                apiResponse.close()
+            }
+            else {
+                Log.d("api", "Error: ${connection.responseCode}")
+            }
+        }
+    }
+    private fun UpdateUI(datetime: String, abbreviation: String) {
+        runOnUiThread {
+            binding.dateTime.text = "$datetime $abbreviation"
+        }
     }
 
-    override fun onTaskItemClick(task: Tasks , operation: String) {
-        // Call CreateDialog with the selected task object
-        CreateDialog(task,operation)
+    // add products to database
+    fun addProducts(){
+        ProjectDB.productsDAO().insertTask(Products(9,"Apple","Food","10.23.2023",10, InCart = false, IsPurchased = false))
+        ProjectDB.productsDAO().insertTask(Products(1,"Banana","Cem","1999",24, InCart = false, IsPurchased = false))
+        ProjectDB.productsDAO().insertTask(Products(2,"Orange","Food","10.23.2023",20, InCart = false, IsPurchased = false))
+
+        ProjectDB.productsDAO().insertTask(Products(3,"Samsung","Phone","11.23.2023",1000, InCart = false, IsPurchased = false))
+        ProjectDB.productsDAO().insertTask(Products(4,"Huawei","Phone","12.23.2023",1200, InCart = false, IsPurchased = false))
+        ProjectDB.productsDAO().insertTask(Products(5,"Xiaomi","Phone","13.23.2023",800, InCart = false, IsPurchased = false))
+
+        ProjectDB.productsDAO().insertTask(Products(6,"Nike","Shoes","14.23.2023",250, InCart = false, IsPurchased = false))
+        ProjectDB.productsDAO().insertTask(Products(7,"Adidas","Shoes","15.23.2023",200, InCart = false, IsPurchased = false))
+        ProjectDB.productsDAO().insertTask(Products(8,"Puma","Shoes","16.23.2023",150, InCart = false, IsPurchased = false))
+
     }
 }

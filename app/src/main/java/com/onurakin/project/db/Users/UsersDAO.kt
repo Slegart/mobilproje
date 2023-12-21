@@ -1,4 +1,4 @@
-package com.onurakin.project.db.Products
+package com.onurakin.project.db.Users
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -9,40 +9,28 @@ import com.sefikonurakin_hw2.util.Constants
 
 
 @Dao
-interface ProductsDAO {
+interface UsersDAO {
     // The conflict strategy defines what happens,if there is an existing entry.
     // The default action is ABORT.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTask(tasks: Products)
+    fun insertUser(users: Users)
 
     @Update
-    fun updateTask(tasks: Products)
+    fun updateUser(users: Users)
 
     @Delete
-    fun deleteTask(tasks: Products)
+    fun deleteUser(users: Users)
 
-    @Query("DELETE FROM ${Constants.TABLENAME}")
-    fun deleteAllTasks()
+    @Query("DELETE FROM ${Constants.TABLEUSERS}")
+    fun deleteAllUsers()
 
-    @Query("SELECT * FROM ${Constants.TABLENAME} ORDER BY id DESC")
-    fun getAllTasks():MutableList<Products>
+    @Query("SELECT * FROM ${Constants.TABLEUSERS} ORDER BY id DESC")
+    fun getAllUsers():MutableList<Users>
 
-    @Query("SELECT * FROM ${Constants.TABLENAME} WHERE id =:id")
-    fun getTaskById(id:Int): Products
+    @Query("SELECT * FROM ${Constants.TABLEUSERS} WHERE id =:id")
+    fun getUserById(id:Int): Users
 
-    @Query("SELECT * FROM ${Constants.TABLENAME} WHERE ProductName LIKE :name")
-    fun getTasksByName(name:String):MutableList<Products>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllTasks(tasks: ArrayList<Products>){
-        tasks.forEach{
-            insertTask(it)
-        }
-    }
-    @Query("SELECT DISTINCT productType FROM ${Constants.TABLENAME}")
-    fun getDistinctProductTypes(): List<String>
-
-    @Query("SELECT * FROM Products WHERE ProductType = :ProductType")
-    fun getProductsByCategory(ProductType: String): List<Products>
+    @Query("SELECT * FROM ${Constants.TABLEUSERS} WHERE UserName LIKE :name")
+    fun getUsersByName(name:String):MutableList<Users>
 
 }

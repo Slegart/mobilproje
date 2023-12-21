@@ -1,33 +1,28 @@
-package com.sefikonurakin_hw2.adapter
+package com.onurakin.project.adapter
 
 import android.content.Context
-import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.sefikonurakin_hw2.R
-import com.sefikonurakin_hw2.db.Tasks
+import com.onurakin.project.R
+import com.onurakin.project.db.Products.Products
 
 
 class CustomRecyclerViewAdapter(
     private val context: Context,
-    private val recyclerItemValues: MutableList<Tasks>,
+    private val recyclerItemValues: MutableList<Products>,
     private val itemClickListener: OnTaskItemClickListener
 ) : RecyclerView.Adapter<CustomRecyclerViewAdapter.RecyclerViewItemHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerViewItemHolder {
-        // Use viewType to determine which layout to inflate
-        val layoutResId = if (viewType == 1) R.layout.recycler_item else R.layout.recycler_item_2
+        val layoutResId = R.layout.recycler_item
 
         val inflator = LayoutInflater.from(viewGroup.context)
         val itemView: View = inflator.inflate(layoutResId, viewGroup, false)
-
-        val backgroundColor = if (viewType == 1) Color.GREEN else Color.RED
-        itemView.setBackgroundColor(backgroundColor)
 
         return RecyclerViewItemHolder(itemView)
     }
@@ -35,9 +30,9 @@ class CustomRecyclerViewAdapter(
     override fun onBindViewHolder(myRecyclerViewItemHolder: RecyclerViewItemHolder, position: Int) {
         val item = recyclerItemValues[position]
 
-        myRecyclerViewItemHolder.TaskName.text = item.TaskName
+        myRecyclerViewItemHolder.TaskName.text = item.ProductName
         myRecyclerViewItemHolder.TaskDate.text = item.Date
-        myRecyclerViewItemHolder.TaskPriority.text = item.Priority.toString()
+        myRecyclerViewItemHolder.TaskPriority.text = item.Price.toString()
 
         myRecyclerViewItemHolder.parentLayout.setOnClickListener {
             itemClickListener.onTaskItemClick(item, "update")
@@ -46,11 +41,6 @@ class CustomRecyclerViewAdapter(
 
     override fun getItemCount(): Int {
         return recyclerItemValues.size
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        // Determine the viewType based on the priority
-        return if (recyclerItemValues[position].Priority > 3) 2 else 1
     }
 
     inner class RecyclerViewItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -68,7 +58,13 @@ class CustomRecyclerViewAdapter(
     }
 
     interface OnTaskItemClickListener {
-        fun onTaskItemClick(task: Tasks, operation: String)
+        fun onTaskItemClick(task: Products, operation: String)
+
+    }
+    fun updateData(newData: List<Products>) {
+        recyclerItemValues.clear()
+        recyclerItemValues.addAll(newData)
+        notifyDataSetChanged()
+        Log.d("CustomRecyclerViewAdapter", "Data updated. New size: ${recyclerItemValues.size}")
     }
 }
-
