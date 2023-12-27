@@ -20,7 +20,6 @@ class CustomRecyclerViewAdapter(
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerViewItemHolder {
         val layoutResId = R.layout.recycler_item
-
         val inflator = LayoutInflater.from(viewGroup.context)
         val itemView: View = inflator.inflate(layoutResId, viewGroup, false)
 
@@ -35,8 +34,9 @@ class CustomRecyclerViewAdapter(
         myRecyclerViewItemHolder.TaskPriority.text = item.Price.toString()
 
         myRecyclerViewItemHolder.parentLayout.setOnClickListener {
-            itemClickListener.onTaskItemClick(item, "update")
+            itemClickListener.onTaskItemClick(item, "remove")
         }
+
     }
 
     override fun getItemCount(): Int {

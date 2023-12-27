@@ -9,7 +9,7 @@
     android:background="@drawable/border">
 
     <TextView
-        android:id="@+id/task_name"
+        android:id="@+id/nameoffragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -20,20 +20,10 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
-        android:id="@+id/task_date"
+        android:id="@+id/priceofFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="TextView"
-        android:textColor="#E59462"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    <TextView
-        android:id="@+id/task_priority"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:gravity="center"
         android:text="TextView"
         android:textColor="#E59462"

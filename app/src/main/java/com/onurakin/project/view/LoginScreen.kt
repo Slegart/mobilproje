@@ -1,6 +1,7 @@
 package com.onurakin.project.view
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,12 +23,13 @@ import kotlinx.coroutines.withContext
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Date
 
 class LoginScreen : AppCompatActivity() {
 
     lateinit var binding: ActivityLoginScreenBinding
     var isRegisterMode: Boolean = false
-
+    lateinit var mediaPlayer: MediaPlayer
     private val ProjectDB: ProductRoomDatabase by lazy {
         Room.databaseBuilder(this, ProductRoomDatabase::class.java, Constants.DATABASENAME)
             .allowMainThreadQueries()
@@ -41,17 +43,15 @@ class LoginScreen : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.genderradiogroup.visibility = View.GONE
-
+        mediaPlayer = MediaPlayer.create(this, R.raw.store_bell)
         binding.OKButton.setOnClickListener {
             val username = binding.Username.text.toString()
             val password = binding.editTextTextPassword.text.toString()
 
             if (validateInput(username, password)) {
                 if (isRegisterMode) {
-                    // Call register function
                     registerUser(username, password)
                 } else {
-                    // Call login function
                     loginUser(username, password)
                 }
             } else {
@@ -60,12 +60,12 @@ class LoginScreen : AppCompatActivity() {
         }
 
         binding.Login.setOnClickListener {
-            // Ok button pressed, hide genderradiogroup
+            mediaPlayer.start()
             binding.genderradiogroup.visibility = View.GONE
         }
 
         binding.Register.setOnClickListener {
-            // Register button pressed, show genderradiogroup
+            mediaPlayer.start()
             binding.genderradiogroup.visibility = View.VISIBLE
             isRegisterMode = true
         }
@@ -76,17 +76,24 @@ class LoginScreen : AppCompatActivity() {
                 password.isNotEmpty() && password.length > 6
     }
 
+    companion object {
+        var currentUserId: Int = -1
+    }
     private fun loginUser(username: String, password: String) {
         val userList = ProjectDB.usersDAO().getUsersByName(username)
-
+        mediaPlayer.start()
+        Log.d("UserLogin", "User list: $userList")
         if (userList.isNotEmpty()) {
             val user = userList[0]
 
             if (user.Password == password) {
+                currentUserId = user.id
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("addproducts", true)
                 startActivity(intent)
                 finish()
-            } else {
+            }
+            else {
                 Toast.makeText(this, "wrong password", Toast.LENGTH_SHORT).show()
             }
         } else {
@@ -94,7 +101,7 @@ class LoginScreen : AppCompatActivity() {
         }
     }
 
-
+/*
     private suspend fun getApi(): String {
         return withContext(Dispatchers.IO) {
             val url = URL("https://worldtimeapi.org/api/timezone/Europe/Istanbul")
@@ -114,7 +121,7 @@ class LoginScreen : AppCompatActivity() {
             }
         }
     }
-
+    */
     private fun registerUser(username: String, password: String) {
         val selectedGenderId = binding.genderradiogroup.checkedRadioButtonId
         val gender = when (selectedGenderId) {
@@ -123,27 +130,19 @@ class LoginScreen : AppCompatActivity() {
             else -> ""
         }
 
-        val datetime = runBlocking {
-            getApi()
-        }
-        Log.d("UserRegistration", "User registered - Username: $username, Password: $password))")
-        Log.d("UserRegistration", "gender: $gender, datetime: $datetime")
-
         val newUser = Users(
             UserName = username,
             Gender = gender,
-            JoinDate = datetime,
+            JoinDate = Date().toString(),
             Money = 10000,
             Password = password
         )
 
         ProjectDB.usersDAO().insertUser(newUser)
         Log.d("UserRegistration", "User inserted into database")
-
+        currentUserId = newUser.id
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
-
-
 }

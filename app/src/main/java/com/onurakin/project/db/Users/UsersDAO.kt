@@ -10,8 +10,6 @@ import com.sefikonurakin_hw2.util.Constants
 
 @Dao
 interface UsersDAO {
-    // The conflict strategy defines what happens,if there is an existing entry.
-    // The default action is ABORT.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(users: Users)
 
@@ -32,5 +30,8 @@ interface UsersDAO {
 
     @Query("SELECT * FROM ${Constants.TABLEUSERS} WHERE UserName LIKE :name")
     fun getUsersByName(name:String):MutableList<Users>
+
+    @Query("UPDATE ${Constants.TABLEUSERS} SET Money = :money WHERE id = :id")
+    fun updateMoney(id:Int, money:Int)
 
 }

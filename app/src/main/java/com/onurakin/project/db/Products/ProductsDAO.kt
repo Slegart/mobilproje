@@ -10,13 +10,14 @@ import com.sefikonurakin_hw2.util.Constants
 
 @Dao
 interface ProductsDAO {
-    // The conflict strategy defines what happens,if there is an existing entry.
-    // The default action is ABORT.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTask(tasks: Products)
 
     @Update
     fun updateTask(tasks: Products)
+
+    @Query("UPDATE ${Constants.TABLEPRODUCTS} SET inCart = :inCartValue WHERE id = :productId")
+    fun updateInCartStatus(productId: Int, inCartValue: Boolean)
 
     @Delete
     fun deleteTask(tasks: Products)
@@ -26,6 +27,9 @@ interface ProductsDAO {
 
     @Query("SELECT * FROM ${Constants.TABLEPRODUCTS} ORDER BY id DESC")
     fun getAllTasks():MutableList<Products>
+
+    @Query("DELETE FROM ${Constants.TABLEPRODUCTS} WHERE id = :id")
+    fun deleteTaskById(id: Int)
 
     @Query("SELECT * FROM ${Constants.TABLEPRODUCTS} WHERE id =:id")
     fun getTaskById(id:Int): Products

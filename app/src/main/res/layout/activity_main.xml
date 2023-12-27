@@ -1,55 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
-
-    <TextView
-        android:id="@+id/date_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="27dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerofProducts" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerofProducts"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/date_time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".view.MainActivity"
+    android:orientation="vertical"
+    android:fillViewport="true"
+    android:padding="5dp"
+    android:background="#E1E5EB">
 
     <Spinner
         android:id="@+id/productTypes"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textAlignment="center"
+        android:background="@drawable/border"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerofProducts"
+        android:layout_width="match_parent"
+        android:layout_height="510dp"
+        app:layout_constraintBottom_toTopOf="@+id/date_time" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="center">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/cart"
-        android:layout_width="60dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="4dp"
-        android:clickable="true"
-        android:src="@drawable/cart"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerofProducts"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerofProducts" />
+        <TextView
+            android:id="@+id/date_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:text="TextView"
+            android:textColor="#E59462"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerofProducts" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/cart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0.2"
+            android:clickable="true"
+            android:gravity="center"
+            android:src="@drawable/cart"
+            app:backgroundTint="#E59462"
+            app:tint="#E1E5EB"
+            app:layout_constraintEnd_toEndOf="@+id/recyclerofProducts"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerofProducts"
+            android:soundEffectsEnabled="false"/>
+    </LinearLayout>
+
+</LinearLayout>

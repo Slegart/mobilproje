@@ -19,7 +19,6 @@ class Products(
     var InCart: Boolean = false,
     var IsPurchased: Boolean = false
 ) : Parcelable {
-    // Parcelable constructor
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString() ?: "",

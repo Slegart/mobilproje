@@ -19,7 +19,6 @@ class Users(
     var Password: String = ""
 
 ) : Parcelable {
-    // Parcelable constructor
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString() ?: "",

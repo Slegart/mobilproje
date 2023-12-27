@@ -1,85 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.LoginScreen">
+    tools:context=".view.LoginScreen"
+    android:orientation="vertical"
+    android:gravity="fill_vertical"
+    android:padding="5dp"
+    android:background="#E1E5EB">
 
-    <EditText
-        android:id="@+id/Username"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/border"
+        android:gravity="center"
+        android:id="@+id/theLayout">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="292dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/cart"
+        app:tint="#E59462" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="79dp"
-        android:layout_marginTop="154dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="5dp">
 
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="@+id/Username"
-        app:layout_constraintTop_toBottomOf="@+id/Username" />
-
-    <RadioGroup
-        android:id="@+id/genderradiogroup"
-        android:layout_width="129dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="79dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="81dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword">
-
-        <RadioButton
-            android:id="@+id/Male"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/Register"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Male" />
+            android:layout_marginEnd="2.5dp"
+            android:layout_weight="0.5"
+            android:text="REGISTER"
+            android:backgroundTint="#E59462"
+            android:textColor="#E1E5EB"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingVertical="10dp"
+            android:soundEffectsEnabled="false"/>
 
-        <RadioButton
-            android:id="@+id/Female"
-            android:layout_width="128dp"
-            android:layout_height="67dp"
-            android:text="Female" />
-    </RadioGroup>
+        <Button
+            android:id="@+id/Login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2.5dp"
+            android:layout_weight="0.5"
+            android:text="LOGIN"
+            android:backgroundTint="#E59462"
+            android:textColor="#E1E5EB"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingVertical="10dp"
+            android:soundEffectsEnabled="false"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/Login"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="16dp"
-        android:text="login"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@drawable/border"
+        android:paddingHorizontal="15dp"
+        android:layout_marginBottom="10dp">
 
-    <Button
-        android:id="@+id/Register"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="User Name: "
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#E59462" />
+
+        <EditText
+            android:id="@+id/Username"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:ems="10"
+            android:inputType="text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#E59462"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:backgroundTint="#E59462"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="56dp"
-        android:text="register"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@drawable/border"
+        android:paddingHorizontal="15dp"
+        android:layout_marginBottom="10dp"
+        >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Password: "
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#E59462" />
+
+        <EditText
+            android:id="@+id/editTextTextPassword"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#E59462"
+            app:layout_constraintStart_toStartOf="@+id/Username"
+            app:layout_constraintTop_toBottomOf="@+id/Username"
+            app:backgroundTint="#E59462"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/genderLayout"
+        android:background="@drawable/border"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Gender: "
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#E59462" />
+
+        <RadioGroup
+            android:id="@+id/genderradiogroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword">
+
+            <RadioButton
+                android:id="@+id/Male"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#E59462"
+                app:buttonTint="#E59462" />
+
+            <RadioButton
+                android:id="@+id/Female"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#E59462"
+                app:buttonTint="#E59462" />
+        </RadioGroup>
+    </LinearLayout>
 
     <Button
         android:id="@+id/OKButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="66dp"
-        android:layout_marginTop="89dp"
-        android:text="ok"
+        android:text="ENTER"
+        android:backgroundTint="#E59462"
+        android:textColor="#E1E5EB"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="@+id/genderradiogroup"
-        app:layout_constraintTop_toBottomOf="@+id/genderradiogroup" />
+        app:layout_constraintTop_toBottomOf="@+id/genderradiogroup"
+        android:paddingVertical="10dp"
+        android:soundEffectsEnabled="false"/>
+</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
